@@ -23,10 +23,18 @@ css make pretty
 // - allow the player object to be interactable
 //   - click-draggable
 
-let player = d3.select('body').append('svg');
+let board = d3.select('body').append('svg');
+let drag = d3.behavior.drag();
+let player = board.append('circle'); // separate appending the new circle and referring to it in this declaration; refer to d3 docs for referring
 
-player.attr('width', 100).attr('height', 100);
-player.append('circle').attr('cx', 50).attr('cy', 50).attr('r', 10).attr('fill', 'dodgerblue');
+drag.on('dragstart', function() {
+  d3.event.sourceEvent.stopPropagation(); // silence other listeners
+});
+drag.on('drag', function() {
+  player.attr('cx', d3.event.x).attr('cy', d3.event.y);
+});
 
-
-
+board.attr('width', 100).attr('height', 100); // update to size of screen
+player.attr('id', 'player').attr('cx', 50).attr('cy', 50).attr('r', 10).attr('fill', 'dodgerblue');
+player.call(drag);
+// debugger;
